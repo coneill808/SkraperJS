@@ -120,3 +120,12 @@ document.body.addEventListener("click", (event) => {
     }
 
 });
+
+document.getElementById("parse-button").addEventListener("click", async () => {
+    const [tab] = await chrome.tabs.query({ active:true, currentWindow: true});
+    console.log("Reached the html extraction");
+    chrome.scripting.executeScript({
+        target: { tabID: tab.id },
+        function: parseTable,
+    });
+});
