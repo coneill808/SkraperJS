@@ -1,9 +1,12 @@
+console.log('popup running');
+
+
 function parseTable(table) {
 
     var file_string = "";
 
-    //var table_number = window.prompt("Table number:") - 1;
-    var column_names = table.children[0].children[0].children;
+    var table_number = window.prompt("Table number:") - 1;
+    var column_names = document.getElementsByTagName("table")[table_number].children[0].children[0].children;
    
     col_names = "";
     for(var i=0; i<column_names.length; i++){
@@ -13,7 +16,7 @@ function parseTable(table) {
     file_string += col_names += "\n";
 
 
-    var table_rows = table.children[1].children;
+    var table_rows = document.getElementsByTagName("table")[table_number].children[1].children;
     var extracted_rows = [];
 
     for(var row_i=0; row_i<table_rows.length; row_i++){
@@ -125,7 +128,14 @@ document.getElementById("parse-button").addEventListener("click", async () => {
     const [tab] = await chrome.tabs.query({ active:true, currentWindow: true});
     console.log("Reached the html extraction");
     chrome.scripting.executeScript({
-        target: { tabID: tab.id },
+        target: { tabId: tab.id },
         function: parseTable,
     });
+});
+
+document.getElementById("page-num").addEventListener("keyup", function(event){
+    if (event.keycode === 13) {
+        event.preventDefault();
+        document.getElementById("parse-button").click();
+    }
 });
